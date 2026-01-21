@@ -3,7 +3,7 @@ import 'dart:math';
 
 void main(){
   final random = Random();
-  int randomNumber = random.nextInt(100) + 1; 
+  int? randomNumber = random.nextInt(100) + 1; 
   int attempts = 0;
   int guess;
   bool correct = false;
