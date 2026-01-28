@@ -30,7 +30,7 @@ void main() {
     
    
     if (userInput == computerChoice) {
-      print('  SERI!');
+      print('keSERI!');
     } else if (
         (userInput == 'batu' && computerChoice == 'gunting') ||
         (userInput == 'kertas' && computerChoice == 'batu') ||
