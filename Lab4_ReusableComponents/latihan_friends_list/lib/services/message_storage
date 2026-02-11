@@ -1,0 +1,79 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../models/message_model.dart';
+
+class MessageStorage {
+  static const String _storageKey = 'chat_messages';
+
+  // Save messages for a specific contact
+  static Future<void> saveMessages(String contactId, List<MessageModel> messages) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      
+      // Get all stored messages
+      Map<String, dynamic> allMessages = {};
+      final storedData = prefs.getString(_storageKey);
+      if (storedData != null) {
+        allMessages = json.decode(storedData);
+      }
+      
+      // Convert messages to JSON
+      final messagesList = messages.map((msg) => {
+        'id': msg.id,
+        'senderId': msg.senderId,
+        'receiverId': msg.receiverId,
+        'message': msg.message,
+        'timestamp': msg.timestamp.toIso8601String(),
+        'isMe': msg.isMe,
+      }).toList();
+      
+      // Store messages for this contact
+      allMessages[contactId] = messagesList;
+      
+      // Save to SharedPreferences
+      await prefs.setString(_storageKey, json.encode(allMessages));
+    } catch (e) {
+      print('Error saving messages: $e');
+    }
+  }
+
+  // Load messages for a specific contact
+  static Future<List<MessageModel>> loadMessages(String contactId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final storedData = prefs.getString(_storageKey);
+      
+      if (storedData == null) {
+        return [];
+      }
+      
+      final Map<String, dynamic> allMessages = json.decode(storedData);
+      
+      if (!allMessages.containsKey(contactId)) {
+        return [];
+      }
+      
+      final List<dynamic> messagesList = allMessages[contactId];
+      
+      return messagesList.map((msgData) {
+        return MessageModel(
+          id: msgData['id'],
+          senderId: msgData['senderId'],
+          receiverId: msgData['receiverId'],
+          message: msgData['message'],
+          timestamp: DateTime.parse(msgData['timestamp']),
+          isMe: msgData['isMe'],
+        );
+      }).toList();
+    } catch (e) {
+      print('Error loading messages: $e');
+      return [];
+    }
+  }
+
+  // Clear all messages (optional - for testing)
+  static Future<void> clearAllMessages() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_storageKey);
+  }
+}
