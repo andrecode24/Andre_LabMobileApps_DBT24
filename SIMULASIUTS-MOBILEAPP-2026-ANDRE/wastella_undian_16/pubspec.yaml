@@ -1,0 +1,27 @@
+name: wastelly_ecommerce
+description: Wastella EcoMarket - Sustainable Shopping for a Greener Future
+
+environment:
+  sdk: '^3.10.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/JNE.png
+    - assets/DHL.png
+    - assets/BCA.png
+    - assets/BRI.png
+    - assets/mandiri.png
+    - assets/logo.png
+   
